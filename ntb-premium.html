@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTB Explorer - 100+ Destinasi Wisata Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2E8B57;
+            --secondary: #FF6347;
+            --accent: #4169E1;
+            --dark: #2C3E50;
+            --light: #7F8C8D;
+            --bg: #F8F9FA;
+            --white: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --text: #2C3E50;
+            --border: #E0E0E0;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0a0a0a;
+            --white: #1a1a2e;
+            --card-bg: #16213e;
+            --text: #eaeaea;
+            --dark: #eaeaea;
+            --light: #b0b0b0;
+            --border: #2a2a4a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* CUSTOM CURSOR */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(46, 139, 87, 0.1);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+        }
+        .cursor.hover {
+            transform: scale(2);
+            background: var(--primary);
+        }
+
+        /* SNOW EFFECT */
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            overflow: hidden;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* FLOATING PARTICLES */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* GRADIENT ORBS */
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+            animation: orbFloat 20s infinite ease-in-out;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--gradient-1);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--gradient-2);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -5s;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--gradient-3);
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* LOADING SCREEN */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+        .loader-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loader-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* NAVBAR - DIPASTIKAN DI ATAS DENGAN JARAK */
+        .navbar { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            z-index: 1000; 
+            transform: translateY(-100%); 
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        .navbar.visible { transform: translateY(0); }
+        .nav-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 1rem; 
+        }
+        .nav-logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--primary); 
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-logo::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .nav-logo:hover::before {
+            transform: translateX(0);
+        }
+        .logo-icon { 
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .nav-menu { 
+            display: flex; 
+            list-style: none; 
+            gap: 0.5rem; 
+            flex-wrap: wrap; 
+        }
+        .nav-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.3rem; 
+            text-decoration: none; 
+            color: var(--text); 
+            font-weight: 500; 
+            padding: 0.5rem 1rem; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        .nav-link:hover::before, .nav-link.active::before {
+            opacity: 0.1;
+        }
+        .nav-link:hover, .nav-link.active { 
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .nav-controls { 
+            display: flex; 
+            gap: 0.5rem; 
+            align-items: center; 
+        }
+        .icon-btn { 
+            background: var(--gradient-1); 
+            color: var(--white); 
+            border: none; 
+            padding: 0.5rem 1rem; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .icon-btn:hover { 
+            transform: translateY(-2px) scale(1.05); 
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .lang-select { 
+            padding: 0.5rem; 
+            border-radius: 50px; 
+            border: 2px solid var(--primary); 
+            background: var(--white); 
+            color: var(--text); 
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* SECTION - PADDING TOP LEBIH BESAR */
+        .section { 
+            display: none; 
+            min-height: 100vh; 
+            padding-top: 150px !important; 
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
+        }
+        .section.active { display: block; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(40px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .section-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 2rem; 
+            position: relative;
+            z-index: 2;
+        }
+        .section-header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            padding-top: 2rem;
+            position: relative;
+        }
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+        .section-title { 
+            font-size: 3rem; 
+            font-weight: 800; 
+            margin-bottom: 1rem; 
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+        .section-subtitle { 
+            font-size: 1.2rem; 
+            color: var(--light); 
+            max-width: 600px; 
+            margin: 0 auto;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        /* BUTTONS */
+        .btn-primary { 
+            background: var(--gradient-1); 
+            color: var(--white); 
+            border: none; 
+            padding: 1.2rem 3rem; 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            font-family: inherit; 
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .btn-primary:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        .btn-back { 
+            background: var(--white); 
+            color: var(--text); 
+            border: 2px solid var(--primary); 
+            padding: 0.8rem 2rem; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            margin-bottom: 2rem; 
+            font-family: inherit; 
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-back:hover { 
+            background: var(--gradient-1);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-explore, .btn-detail { 
+            background: var(--gradient-2); 
+            color: var(--white); 
+            border: none; 
+            padding: 0.8rem 1.5rem; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            margin-top: 1rem; 
+            font-family: inherit; 
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        .btn-explore:hover, .btn-detail:hover { 
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        /* DASHBOARD - PREMIUM EFFECTS */
+        #dashboard { 
+            position: relative; 
+            display: none; 
+            min-height: 100vh; 
+            background-size: cover; 
+            background-position: center; 
+            padding-top: 0 !important; 
+            transition: background-image 1s ease-in-out;
+            overflow: hidden;
+        }
+        #dashboard.active { display: flex; align-items: center; justify-content: center; }
+        
+        /* ANIMATED BACKGROUND OVERLAY */
+        .dashboard-overlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            backdrop-filter: blur(5px);
+            animation: gradientShift 15s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* FLOATING SHAPES */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatShape 20s infinite;
+        }
+        .shape-1 {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: white;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            top: 60%;
+            right: 10%;
+            animation-delay: -5s;
+        }
+        .shape-3 {
+            width: 80px;
+            height: 80px;
+            background: white;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+        @keyframes floatShape {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+        
+        .dashboard-content { 
+            position: relative; 
+            z-index: 10; 
+            text-align: center; 
+            color: var(--white); 
+            padding: 3rem; 
+            max-width: 1000px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 1s ease;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .welcome-badge { 
+            display: inline-block; 
+            background: rgba(255,255,255,0.2); 
+            padding: 0.8rem 2rem; 
+            border-radius: 50px; 
+            font-size: 1rem; 
+            margin-bottom: 2rem; 
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: fadeIn 1s ease;
+            backdrop-filter: blur(10px);
+        }
+        .dashboard-title { 
+            font-size: 4rem; 
+            font-weight: 900; 
+            line-height: 1.2; 
+            margin-bottom: 2rem; 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease 0.2s both;
+        }
+        .dashboard-title .highlight { 
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF6347);
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            background-size: 200% auto;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .dashboard-subtitle { 
+            font-size: 1.4rem; 
+            margin-bottom: 3rem; 
+            opacity: 0.95;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+        .dashboard-stats { 
+            display: flex; 
+            justify-content: center; 
+            gap: 4rem; 
+            margin-bottom: 3rem; 
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.6s both;
+        }
+        .stat-item { 
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.2);
+        }
+        .stat-number { 
+            font-size: 3.5rem; 
+            font-weight: 900; 
+            color: #FFD700; 
+            display: block;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+            animation: countUp 2s ease;
+        }
+        @keyframes countUp {
+            from { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            to { transform: scale(1); }
+        }
+        .stat-label { 
+            font-size: 1rem; 
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* SEARCH BAR GLOBAL */
+        .search-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-1);
+        }
+        .search-box-global {
+            position: relative;
+            width: 100%;
+        }
+        .search-box-global input {
+            width: 100%;
+            padding: 1.2rem 1.5rem 1.2rem 4rem;
+            border: 3px solid var(--border);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .search-box-global input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(46, 139, 87, 0.2);
+            transform: scale(1.02);
+        }
+        .search-icon-global {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+        .search-results-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--gradient-4);
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .search-results-info.active { display: block; }
+        .btn-clear-search {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .btn-clear-search:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        /* REGENCIES */
+        .regencies-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2.5rem; 
+        }
+        .regency-card { 
+            background: var(--card-bg); 
+            border: 3px solid; 
+            border-radius: 25px; 
+            padding: 2.5rem; 
+            text-align: center; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .regency-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 0;
+        }
+        .regency-card:hover::before {
+            opacity: 0.05;
+        }
+        .regency-card:hover { 
+            transform: translateY(-15px) rotateX(5deg); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .regency-logo { 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 2rem; 
+            font-size: 3rem; 
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .regency-card h3 { 
+            font-size: 1.5rem; 
+            margin-bottom: 0.8rem; 
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+        }
+        .regency-card p { 
+            color: var(--light); 
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* DESTINATIONS */
+        .destinations-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+            gap: 2.5rem; 
+        }
+        .destination-card { 
+            background: var(--card-bg); 
+            border-radius: 25px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .destination-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .destination-card:hover { 
+            transform: translateY(-15px) scale(1.02); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .destination-card:hover::before {
+            opacity: 0.03;
+        }
+        .dest-img { 
+            width: 100%; 
+            height: 250px; 
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .destination-card:hover .dest-img {
+            transform: scale(1.1);
+        }
+        .dest-info { 
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        .dest-info h3 { 
+            font-size: 1.6rem; 
+            margin-bottom: 0.8rem; 
+            color: var(--text);
+        }
+        .dest-location { 
+            color: var(--light); 
+            font-size: 0.95rem; 
+            margin-bottom: 1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem;
+        }
+        .dest-desc { 
+            color: var(--light); 
+            font-size: 1rem; 
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        .dest-category { 
+            display: inline-block; 
+            background: var(--gradient-3); 
+            color: var(--white); 
+            padding: 0.5rem 1.2rem; 
+            border-radius: 50px; 
+            font-size: 0.9rem; 
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+        .dest-rating { 
+            color: #FFD700; 
+            font-size: 1.3rem; 
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        /* DETAIL */
+        .breadcrumb { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.8rem; 
+            margin-bottom: 2.5rem; 
+            font-size: 1rem; 
+            flex-wrap: wrap;
+            padding: 1rem 2rem;
+            background: var(--bg);
+            border-radius: 15px;
+        }
+        .breadcrumb-link { 
+            color: var(--primary); 
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .breadcrumb-link:hover { 
+            text-decoration: underline;
+            transform: translateX(5px);
+        }
+        .breadcrumb-separator { color: var(--light); }
+        .breadcrumb-current { 
+            color: var(--text); 
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .detail-container { 
+            background: var(--card-bg); 
+            border-radius: 30px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: slideUp 0.8s ease;
+        }
+        .detail-image-wrapper { 
+            width: 100%; 
+            height: 550px; 
+            overflow: hidden; 
+            position: relative;
+        }
+        .detail-image { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .detail-container:hover .detail-image {
+            transform: scale(1.05);
+        }
+        .detail-category-badge { 
+            position: absolute; 
+            top: 30px; 
+            right: 30px; 
+            background: var(--gradient-1); 
+            color: var(--white); 
+            padding: 1rem 2rem; 
+            border-radius: 50px; 
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            animation: slideInRight 0.5s ease;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .detail-content { 
+            padding: 3rem;
+        }
+        .detail-title { 
+            font-size: 3rem; 
+            margin-bottom: 1.5rem; 
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .detail-rating { 
+            font-size: 2rem; 
+            color: #FFD700; 
+            margin-bottom: 2.5rem;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+        .info-cards { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 3rem;
+        }
+        .info-card { 
+            background: var(--bg); 
+            padding: 2rem; 
+            border-radius: 20px; 
+            display: flex; 
+            gap: 1.5rem; 
+            align-items: flex-start;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(46, 139, 87, 0.2);
+        }
+        .info-icon { 
+            font-size: 2.5rem;
+            animation: bounce 2s infinite;
+        }
+        .info-content h4 { 
+            font-size: 1rem; 
+            color: var(--light); 
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .info-content p { 
+            font-size: 1.1rem; 
+            color: var(--text); 
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        .detail-section { 
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease;
+        }
+        .detail-section-title { 
+            font-size: 1.8rem; 
+            margin-bottom: 1.5rem; 
+            padding-bottom: 1rem; 
+            border-bottom: 4px solid var(--primary); 
+            display: inline-block; 
+            color: var(--text);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .detail-description { 
+            font-size: 1.15rem; 
+            line-height: 2; 
+            text-align: justify; 
+            color: var(--text);
+        }
+        .kuliner-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 1rem;
+        }
+        .kuliner-tag { 
+            background: var(--gradient-2); 
+            color: var(--white); 
+            padding: 0.8rem 1.5rem; 
+            border-radius: 50px; 
+            font-size: 1rem; 
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(240, 147, 251, 0.4);
+            transition: all 0.3s;
+        }
+        .kuliner-tag:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+        .hotel-list { 
+            list-style: none; 
+            display: grid; 
+            gap: 1rem;
+        }
+        .hotel-list li { 
+            background: var(--bg); 
+            padding: 1.5rem 2rem; 
+            border-radius: 15px; 
+            transition: all 0.3s; 
+            color: var(--text);
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+        }
+        .hotel-list li:hover { 
+            background: var(--gradient-4);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(67, 233, 123, 0.3);
+        }
+        .maps-wrapper { 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 1.5rem;
+        }
+        .maps-wrapper iframe { 
+            width: 100%; 
+            height: 500px; 
+            border: none;
+        }
+        .maps-info { 
+            background: var(--bg); 
+            padding: 1.5rem; 
+            border-radius: 15px; 
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        .maps-info strong { 
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* GALLERY */
+        .gallery-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 2rem;
+        }
+        .gallery-item { 
+            position: relative; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            transition: all 0.4s; 
+            aspect-ratio: 4/3; 
+            cursor: pointer;
+        }
+        .gallery-item:hover { 
+            transform: translateY(-10px) scale(1.03); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .gallery-item img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: all 0.5s;
+        }
+        .gallery-item:hover img { 
+            transform: scale(1.2);
+            filter: brightness(0.7);
+        }
+        .gallery-info { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); 
+            color: var(--white); 
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s;
+        }
+        .gallery-item:hover .gallery-info {
+            transform: translateY(0);
+        }
+        .gallery-info h4 { 
+            font-size: 1.3rem; 
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .gallery-info p { 
+            font-size: 1rem; 
+            opacity: 0.9;
+        }
+
+        /* CALCULATOR & ITINERARY */
+        .calculator-container, .itinerary-container { 
+            background: var(--card-bg); 
+            padding: 3rem; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
+            max-width: 900px; 
+            margin: 0 auto;
+            animation: slideUp 0.8s ease;
+        }
+        .calculator-title, .itinerary-title { 
+            font-size: 2.5rem; 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .calc-form { 
+            display: grid; 
+            gap: 2rem;
+        }
+        .calc-input-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.8rem;
+        }
+        .calc-input-group label { 
+            font-weight: 700; 
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+        .calc-input-group input, .calc-input-group select { 
+            padding: 1rem; 
+            border: 2px solid var(--border); 
+            border-radius: 15px; 
+            font-size: 1rem; 
+            background: var(--bg); 
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .calc-input-group input:focus, .calc-input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(46, 139, 87, 0.2);
+            transform: scale(1.02);
+        }
+        .calc-result { 
+            background: var(--gradient-1); 
+            color: var(--white); 
+            padding: 3rem; 
+            border-radius: 20px; 
+            margin-top: 3rem; 
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s infinite;
+        }
+        .calc-total { 
+            font-size: 4rem; 
+            font-weight: 900; 
+            margin: 1.5rem 0;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+        }
+        .day-planner { 
+            background: var(--bg); 
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary);
+            transition: all 0.3s;
+        }
+        .day-planner:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .day-header { 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            margin-bottom: 1.5rem; 
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .day-header::before {
+            content: '📅';
+            font-size: 1.8rem;
+        }
+        .activity-item { 
+            background: var(--white); 
+            padding: 1.5rem; 
+            border-radius: 15px; 
+            margin-bottom: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            align-items: flex-start;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .activity-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .activity-time { 
+            font-weight: 700; 
+            color: var(--primary); 
+            min-width: 120px;
+            background: var(--gradient-3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .activity-content { 
+            flex: 1;
+        }
+        .activity-name { 
+            font-weight: 700; 
+            color: var(--text); 
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .activity-desc { 
+            font-size: 1rem; 
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* ABOUT */
+        .about-container { 
+            max-width: 1100px; 
+            margin: 0 auto;
+        }
+        .profile-card { 
+            background: var(--card-bg); 
+            border-radius: 30px; 
+            padding: 4rem; 
+            text-align: center; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
+            margin-bottom: 3rem;
+            animation: slideUp 0.8s ease;
+        }
+        .profile-avatar { 
+            width: 180px; 
+            height: 180px; 
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        .avatar-placeholder { 
+            width: 100%; 
+            height: 100%; 
+            background: var(--gradient-1); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 5rem; 
+            color: var(--white);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            animation: avatarPulse 3s infinite;
+        }
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6); }
+        }
+        .profile-name { 
+            font-size: 2.5rem; 
+            margin-bottom: 1rem; 
+            color: var(--text);
+            font-weight: 800;
+        }
+        .profile-role { 
+            font-size: 1.3rem; 
+            color: var(--primary); 
+            margin-bottom: 2rem; 
+            font-weight: 600;
+        }
+        .profile-bio { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            text-align: justify; 
+            color: var(--text);
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+        .profile-bio p { 
+            margin-bottom: 1.5rem;
+        }
+        .about-footer { 
+            text-align: center; 
+            padding: 3rem; 
+            background: var(--gradient-1); 
+            color: var(--white); 
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        .about-footer p { 
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .footer-tagline { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            opacity: 0.95;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-menu { gap: 0.3rem; }
+            .nav-link span:last-child { display: none; }
+            .dashboard-title { font-size: 2.5rem; }
+            .dashboard-stats { flex-direction: column; gap: 2rem; }
+            .section-title { font-size: 2.2rem; }
+            .detail-image-wrapper { height: 350px; }
+            .detail-content { padding: 2rem; }
+            .detail-title { font-size: 2rem; }
+            .regencies-grid, .destinations-grid, .gallery-grid { grid-template-columns: 1fr; }
+            .section { padding-top: 120px !important; }
+            .cursor, .cursor-follower { display: none; }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--gradient-1); 
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: var(--gradient-2);
+        }
+
+        /* SCROLL TO TOP BUTTON */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING SCREEN -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">NTB Explorer</div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- SNOW EFFECT -->
+    <div class="snow-container" id="snowContainer"></div>
+
+    <!-- FLOATING PARTICLES -->
+    <div class="particles" id="particles"></div>
+
+    <!-- GRADIENT ORBS -->
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo" onclick="showSection('dashboard')">
+                <span class="logo-icon">🌴</span>
+                <span>NTB Explorer</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a class="nav-link" onclick="showSection('dashboard')"><span>🏠</span><span>Dashboard</span></a></li>
+                <li><a class="nav-link" onclick="showSection('destinations')"><span>🗺️</span><span>Destinasi</span></a></li>
+                <li><a class="nav-link" onclick="showSection('gallery')"><span>📸</span><span>Galeri</span></a></li>
+                <li><a class="nav-link" onclick="showSection('calculator')"><span>💰</span><span>Budget</span></a></li>
+                <li><a class="nav-link" onclick="showSection('itinerary')"><span>🗓️</span><span>Rencana</span></a></li>
+                <li><a class="nav-link" onclick="showSection('about')"><span>ℹ️</span><span>Tentang</span></a></li>
+            </ul>
+            <div class="nav-controls">
+                <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                    <option value="id">🇮🇩 ID</option>
+                    <option value="en">🇬 EN</option>
+                </select>
+                <button class="icon-btn" onclick="toggleDarkMode()" title="Dark Mode">🌓</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section active">
+        <div class="dashboard-overlay"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="dashboard-content">
+            <div class="welcome-badge">🌟 Selamat Datang di NTB</div>
+            <h1 class="dashboard-title">
+                Jelajahi Destinasi<br>
+                <span class="highlight">Favoritmu di NTB</span>
+            </h1>
+            <p class="dashboard-subtitle">Temukan keindahan Lombok, Sumbawa, Dompu, Bima, dan seluruh Nusa Tenggara Barat</p>
+            <div class="dashboard-stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Kabupaten/Kota</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Destinasi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Foto Galeri</div>
+                </div>
+            </div>
+            <button type="button" id="btnExplore" class="btn-primary">Mulai Menjelajah 🚀</button>
+        </div>
+    </section>
+
+    <!-- DESTINATIONS -->
+    <section id="destinations" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('dashboard')">← Kembali</button>
+                <h2 class="section-title">🗺️ Jelajahi Destinasi NTB</h2>
+                <p class="section-subtitle">Cari destinasi favorit Anda dari seluruh Nusa Tenggara Barat</p>
+            </div>
+            
+            <!-- SEARCH BAR -->
+            <div class="search-section">
+                <div class="search-box-global">
+                    <span class="search-icon-global">🔍</span>
+                    <input type="text" id="searchInputGlobal" placeholder="Cari destinasi... (contoh: Pantai Pink, Rinjani, Lakey)" onkeyup="searchDestinationsGlobal()">
+                </div>
+                <div class="search-results-info" id="searchResultsInfo">
+                    <span id="searchResultsText">🔍 Ditemukan 0 destinasi</span>
+                    <button class="btn-clear-search" onclick="clearSearch()">✕ Hapus Pencarian</button>
+                </div>
+            </div>
+
+            <!-- Daftar Kabupaten -->
+            <div id="regencies-view">
+                <h3 style="text-align: center; margin-bottom: 3rem; color: var(--text); font-size: 1.8rem;">Pilih Kabupaten/Kota</h3>
+                <div id="regencies-container" class="regencies-grid"></div>
+            </div>
+
+            <!-- Hasil Pencarian -->
+            <div id="search-results-view" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 3rem; color: var(--text); font-size: 1.8rem;">Hasil Pencarian</h3>
+                <div id="search-results-container" class="destinations-grid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESTINATIONS LIST -->
+    <section id="destinations-list" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('destinations')">← Kembali ke Daftar Kabupaten</button>
+                <h2 class="section-title" id="regency-title">Destinasi</h2>
+                <p class="section-subtitle">Pilih destinasi yang ingin Anda jelajahi</p>
+            </div>
+            <div id="destinations-container" class="destinations-grid"></div>
+        </div>
+    </section>
+
+    <!-- DESTINATION DETAIL -->
+    <section id="destination-detail" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('destinations-list')">← Kembali</button>
+            </div>
+            <div class="detail-container">
+                <div class="breadcrumb">
+                    <span onclick="showSection('destinations')" class="breadcrumb-link">Destinasi</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span id="detail-regency-name" class="breadcrumb-current">Kabupaten</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span id="detail-dest-name" class="breadcrumb-current">Destinasi</span>
+                </div>
+                <div class="detail-image-wrapper">
+                    <img id="detail-image" src="" alt="Destination" class="detail-image">
+                    <span id="detail-category" class="detail-category-badge">Pantai</span>
+                </div>
+                <div class="detail-content">
+                    <h1 id="detail-dest-name-title" class="detail-title"></h1>
+                    <div class="detail-rating" id="detail-rating">⭐⭐⭐⭐⭐</div>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-icon">📍</div>
+                            <div class="info-content">
+                                <h4>Lokasi</h4>
+                                <p id="detail-location"></p>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">🎫</div>
+                            <div class="info-content">
+                                <h4>Harga Tiket</h4>
+                                <p id="detail-ticket"></p>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">🕐</div>
+                            <div class="info-content">
+                                <h4>Jam Operasional</h4>
+                                <p id="detail-hours"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">📖 Deskripsi</h3>
+                        <p id="detail-desc" class="detail-description"></p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">🍽️ Kuliner Khas</h3>
+                        <div id="detail-kuliner" class="kuliner-container"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">🏨 Rekomendasi Hotel</h3>
+                        <ul id="detail-hotel" class="hotel-list"></ul>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">🗺️ Lokasi di Peta (GPS)</h3>
+                        <div class="maps-info">
+                            <strong>Koordinat GPS:</strong> <span id="gps-coordinates">Loading...</span><br>
+                            <small>Klik marker untuk melihat detail lokasi</small>
+                        </div>
+                        <div class="maps-wrapper">
+                            <iframe id="detail-maps" src="" frameborder="0" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('dashboard')">← Kembali</button>
+                <h2 class="section-title">📸 Galeri Foto Destinasi NTB</h2>
+                <p class="section-subtitle">Keindahan Nusa Tenggara Barat dalam balutan foto</p>
+            </div>
+            <div id="gallery-container" class="gallery-grid"></div>
+        </div>
+    </section>
+
+    <!-- BUDGET CALCULATOR -->
+    <section id="calculator" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('dashboard')">← Kembali</button>
+                <h2 class="section-title">💰 Kalkulator Budget Perjalanan</h2>
+                <p class="section-subtitle">Hitung estimasi biaya perjalanan Anda ke NTB</p>
+            </div>
+            <div class="calculator-container">
+                <h3 class="calculator-title">Kalkulator Budget</h3>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label>Jumlah Orang</label>
+                        <input type="number" id="calcPeople" value="2" min="1" onchange="calculateBudget()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Jumlah Hari</label>
+                        <input type="number" id="calcDays" value="5" min="1" onchange="calculateBudget()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Tipe Akomodasi</label>
+                        <select id="calcAccommodation" onchange="calculateBudget()">
+                            <option value="150000">Budget (Rp 150.000/malam)</option>
+                            <option value="350000" selected>Menengah (Rp 350.000/malam)</option>
+                            <option value="750000">Mewah (Rp 750.000/malam)</option>
+                        </select>
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Budget Makan per Hari per Orang</label>
+                        <select id="calcFood" onchange="calculateBudget()">
+                            <option value="75000">Budget (Rp 75.000)</option>
+                            <option value="150000" selected>Menengah (Rp 150.000)</option>
+                            <option value="300000">Mewah (Rp 300.000)</option>
+                        </select>
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Budget Transportasi</label>
+                        <select id="calcTransport" onchange="calculateBudget()">
+                            <option value="500000">Transport Umum (Rp 500.000)</option>
+                            <option value="1500000" selected>Sewa Mobil (Rp 1.500.000)</option>
+                            <option value="3000000">Supir Pribadi (Rp 3.000.000)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calc-result">
+                    <div>Total Estimasi Biaya</div>
+                    <div class="calc-total" id="calcTotal">Rp 0</div>
+                    <div>per orang</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ITINERARY -->
+    <section id="itinerary" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('dashboard')">← Kembali</button>
+                <h2 class="section-title">🗓️ Rencana Perjalanan</h2>
+                <p class="section-subtitle">Buat rencana perjalanan NTB sempurna Anda</p>
+            </div>
+            <div class="itinerary-container">
+                <h3 class="itinerary-title">Contoh Rencana Perjalanan 5 Hari di NTB</h3>
+                <div class="day-planner">
+                    <div class="day-header">Hari 1: Kedatangan & Senggigi</div>
+                    <div class="activity-item">
+                        <div class="activity-time">08:00 - 10:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Kedatangan di Bandara Lombok</div>
+                            <div class="activity-desc">Penjemputan dan transfer ke hotel</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">14:00 - 17:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Jelajahi Pantai Senggigi</div>
+                            <div class="activity-desc">Santai di pantai dan nikmati sunset</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-planner">
+                    <div class="day-header">Hari 2: Gili Islands</div>
+                    <div class="activity-item">
+                        <div class="activity-time">08:00 - 09:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Fast boat ke Gili Trawangan</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">10:00 - 15:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Snorkeling & Tour Pulau</div>
+                            <div class="activity-desc">Kunjungi turtle point dan terumbu karang</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-planner">
+                    <div class="day-header">Hari 3: Gunung Rinjani & Air Terjun</div>
+                    <div class="activity-item">
+                        <div class="activity-time">08:00 - 11:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Kunjungi Air Terjun Sendang Gile</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">12:00 - 15:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Trek ke Air Terjun Tiu Kelep</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-planner">
+                    <div class="day-header">Hari 4: Mandalika & Kuta</div>
+                    <div class="activity-item">
+                        <div class="activity-time">09:00 - 12:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Kunjungi Sirkuit Mandalika</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">13:00 - 16:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Santai di Pantai Tanjung Aan</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-planner">
+                    <div class="day-header">Hari 5: Pantai Pink & Kepulangan</div>
+                    <div class="activity-item">
+                        <div class="activity-time">07:00 - 12:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Wisata sehari ke Pantai Pink</div>
+                            <div class="activity-desc">Salah satu dari 7 pantai pink di dunia</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">14:00 - 16:00</div>
+                        <div class="activity-content">
+                            <div class="activity-name">Kembali ke bandara & kepulangan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <button class="btn-back" onclick="showSection('dashboard')">← Kembali</button>
+                <h2 class="section-title">ℹ️ Tentang Kami</h2>
+                <p class="section-subtitle">Informasi Pembuat Website</p>
+            </div>
+            <div class="about-container">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <div class="avatar-placeholder">👨‍💻</div>
+                    </div>
+                    <h3 class="profile-name">Developer NTB Explorer</h3>
+                    <p class="profile-role">Web Developer & Travel Enthusiast</p>
+                    <div class="profile-bio">
+                        <p>Website ini dibuat oleh anak muda yg sangat ambisus dlm belajar di buat dengan penuh cinta untuk memperkenalkan keindahan Nusa Tenggara Barat kepada dunia. Dari pantai berpasir pink di Lombok Timur, ombak kelas dunia di Lakey Dompu, hingga kaldera raksasa Gunung Tambora — semua ada di sini!</p>
+                        <p>Tujuan kami adalah menjadi panduan terlengkap untuk menjelajahi NTB, mulai dari destinasi populer hingga hidden gems yang jarang diketahui.</p>
+                        <p>BY RAFLI</p>
+                    </div>
+                </div>
+                <div class="about-footer">
+                    <p>© 2026 NTB Explorer. Dibuat dengan ❤️ oleh rafli untuk Nusa Tenggara Barat</p>
+                    <p class="footer-tagline">Jelajahi. Nikmati. Kenangan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+    <script>
+        // ==========================================
+        // DATA DESTINASI LENGKAP (100+ DESTINASI)
+        // ==========================================
+        const destinationsData = {
+            "lombok_barat": {
+                nama: "Kabupaten Lombok Barat", logo: "🏛️", color: "#2E8B57",
+                destinations: [
+                    { id: "senggigi", nama: "Pantai Senggigi", kategori: "beach", gambar: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
+                      deskripsi: "Pantai Senggigi adalah destinasi wisata paling terkenal di Lombok Barat dengan pasir putih dan garis pantai yang panjang. Tempat ini menawarkan pemandangan sunset yang memukau dan ombak yang tenang, cocok untuk berenang dan bersantai.",
+                      lokasi: "Jl. Raya Senggigi, Kec. Batulayar, Lombok Barat", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.5,
+                      koordinat: { lat: -8.4906, lng: 116.0456 },
+                      kuliner: ["Nasi Balap Puyung", "Ayam Taliwang", "Sate Rembiga", "Plecing Kangkung", "Bebalung"],
+                      hotel: ["Sheraton Senggigi Beach Resort", "Kila Senggigi Beach Hotel", "Horizon Senggigi", "Jayakarta Hotel", "Pondok Santi Estate"],
+                      reviews: [] },
+                    { id: "pusuk_pass", nama: "Pusuk Pass", kategori: "culture", gambar: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800",
+                      deskripsi: "Pusuk Pass adalah kawasan hutan lindung yang menjadi habitat alami monyet ekor panjang. Terletak di jalur antara Senggigi dan Mataram, tempat ini menawarkan pengalaman unik berinteraksi dengan monyet-monyet lucu.",
+                      lokasi: "Jl. Raya Senggigi-Mataram, Lombok Barat", tiket: "Rp 5.000", jamBuka: "08.00 - 17.00", rating: 4.2,
+                      koordinat: { lat: -8.5123, lng: 116.0512 },
+                      kuliner: ["Es Kelapa Muda", "Pisang Goreng", "Jagung Bakar", "Kacang Rebus"],
+                      hotel: ["Senggigi Beach Hotel", "Pondok Santi Estate", "Mataram City Hotel"],
+                      reviews: [] },
+                    { id: "narmada", nama: "Taman Narmada", kategori: "culture", gambar: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=800",
+                      deskripsi: "Taman Narmada adalah taman bersejarah yang dibangun oleh Raja Mataram pada tahun 1720. Terkenal dengan mata air yang dipercaya sebagai awet muda dan arsitektur khas Sasak-Lombok.",
+                      lokasi: "Desa Lembuah, Kec. Narmada, Lombok Barat", tiket: "Rp 15.000", jamBuka: "08.00 - 17.00", rating: 4.6,
+                      koordinat: { lat: -8.6189, lng: 116.1567 },
+                      kuliner: ["Nasi Campur Narmada", "Sate Bulayak", "Bebalung", "Jaje Tujak"],
+                      hotel: ["Narmada Heritage Hotel", "Lombok Plaza Hotel", "Mataram City Hotel"],
+                      reviews: [] },
+                    { id: "lembah_aiq", nama: "Lembah Aiq", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800",
+                      deskripsi: "Lembah Aiq adalah air terjun tersembunyi dengan kolam alami yang jernih. Tempat yang sempurna untuk berenang dan bersantai di tengah hutan tropis yang asri.",
+                      lokasi: "Lingsar, Lombok Barat", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.4,
+                      koordinat: { lat: -8.5345, lng: 116.0345 },
+                      kuliner: ["Nasi Campur", "Ayam Bakar", "Es Kelapa"],
+                      hotel: ["Lingsar Homestay", "Narmada Hotel"],
+                      reviews: [] },
+                    { id: "pantai_batu_layar", nama: "Pantai Batu Layar", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai Batu Layar menawarkan pemandangan sunset yang spektakuler dengan formasi batu karang yang unik. Lokasi yang populer untuk fotografi dan bersantai.",
+                      lokasi: "Batu Layar, Lombok Barat", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.3,
+                      koordinat: { lat: -8.4967, lng: 116.0467 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Jagung Bakar"],
+                      hotel: ["Batu Layar Resort", "Senggigi Beach Hotel"],
+                      reviews: [] }
+                ]
+            },
+            "lombok_utara": {
+                nama: "Kabupaten Lombok Utara", logo: "🏔️", color: "#4169E1",
+                destinations: [
+                    { id: "rinjani", nama: "Gunung Rinjani", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1589553416260-f58f67f2b5ca?w=800",
+                      deskripsi: "Gunung Rinjani adalah gunung berapi aktif dengan ketinggian 3.726 mdpl, gunung tertinggi kedua di Indonesia. Menawarkan pemandangan Danau Segara Anak yang memukau dan pengalaman mendaki yang tak terlupakan.",
+                      lokasi: "Taman Nasional Gunung Rinjani, Lombok Utara", tiket: "Rp 150.000 (Domestik), Rp 500.000 (Mancanegara)", jamBuka: "24 Jam", rating: 4.9,
+                      koordinat: { lat: -8.4098, lng: 116.4561 },
+                      kuliner: ["Nasi Campur Pendaki", "Sayur Sop", "Kopi Lombok", "Coklat Panas"],
+                      hotel: ["Rinjani Mountain Lodge", "Sembalun Homestay", "Senaru Village Lodge", "Rinjani Trek Homestay"],
+                      reviews: [] },
+                    { id: "gili_trawangan", nama: "Gili Trawangan", kategori: "island", gambar: "https://images.unsplash.com/photo-1516651029879-17395e0a2a07?w=800",
+                      deskripsi: "Gili Trawangan adalah pulau terbesar di antara tiga Gili Islands. Dikenal dengan pantai pasir putih, air laut jernih, dan kehidupan malam yang meriah. Bebas kendaraan bermotor.",
+                      lokasi: "Kec. Pemenang, Lombok Utara", tiket: "Rp 20.000 (Tiket Pelabuhan)", jamBuka: "24 Jam", rating: 4.7,
+                      koordinat: { lat: -8.3456, lng: 116.0400 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur Gili", "Seafood Fresh", "Smoothie Bowl", "Fresh Juice"],
+                      hotel: ["Ombak Sunset Gili Trawangan", "Pondok Santi Estate", "Gili Lankanfushi", "Villa Ombak"],
+                      reviews: [] },
+                    { id: "sendang_gile", nama: "Air Terjun Sendang Gile", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800",
+                      deskripsi: "Air Terjun Sendang Gile setinggi 31 meter di kaki Gunung Rinjani. Airnya jernih dan sejuk dikelilingi hutan tropis yang asri. Akses mudah dengan tangga batu.",
+                      lokasi: "Desa Senaru, Kec. Bayan, Lombok Utara", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.6,
+                      koordinat: { lat: -8.3472, lng: 116.4467 },
+                      kuliner: ["Nasi Campur Senaru", "Ayam Bakar", "Es Kelapa Muda", "Jagung Bakar"],
+                      hotel: ["Senaru Village Lodge", "Rinjani Trek Homestay", "Bamboo Homestay"],
+                      reviews: [] },
+                    { id: "tiu_kelep", nama: "Air Terjun Tiu Kelep", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800",
+                      deskripsi: "Air Terjun Tiu Kelep memiliki kolam alami yang dalam dan jernih, cocok untuk berenang. Perjalanan menuju ke sini melewati jalur trekking yang menantang melewati hutan.",
+                      lokasi: "Desa Senaru, Kec. Bayan, Lombok Utara", tiket: "Rp 10.000", jamBuka: "08.00 - 16.00", rating: 4.7,
+                      koordinat: { lat: -8.3489, lng: 116.4478 },
+                      kuliner: ["Nasi Campur Senaru", "Jagung Bakar", "Pisang Goreng"],
+                      hotel: ["Senaru Village Lodge", "Rinjani Trek Homestay"],
+                      reviews: [] },
+                    { id: "gili_meno", nama: "Gili Meno", kategori: "island", gambar: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+                      deskripsi: "Gili Meno adalah pulau terkecil dan paling tenang. Cocok untuk honeymoon dengan danau air asin dan snorkeling spot yang luar biasa. Bebas kendaraan bermotor.",
+                      lokasi: "Kec. Pemenang, Lombok Utara", tiket: "Rp 20.000", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.3589, lng: 116.0712 },
+                      kuliner: ["Seafood Grill", "Nasi Campur Gili", "Fresh Coconut", "Ikan Bakar"],
+                      hotel: ["Meno Beach House", "Gili Meno Bungalows", "Pondok Baru Bungalows"],
+                      reviews: [] },
+                    { id: "gili_air", nama: "Gili Air", kategori: "island", gambar: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800",
+                      deskripsi: "Gili Air menyeimbangkan ketenangan dan kehidupan sosial. Memiliki pantai indah dan spot snorkeling yang bagus. Lebih santai dibanding Gili Trawangan.",
+                      lokasi: "Kec. Pemenang, Lombok Utara", tiket: "Rp 20.000", jamBuka: "24 Jam", rating: 4.5,
+                      koordinat: { lat: -8.3689, lng: 116.0812 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Gado-Gado", "Smoothies", "Fresh Juice"],
+                      hotel: ["Gili Air Private Island", "Segara Village Hotel", "Manta Dive Bungalows"],
+                      reviews: [] },
+                    { id: "sembalun", nama: "Dataran Tinggi Sembalun", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+                      deskripsi: "Dataran tinggi Sembalun dengan pemandangan Gunung Rinjani yang megah. Udara sejuk dan pemandangan sawah yang indah. Basecamp pendakian Rinjani.",
+                      lokasi: "Kec. Sembalun, Lombok Utara", tiket: "Gratis", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.4678, lng: 116.4678 },
+                      kuliner: ["Nasi Campur Sembalun", "Sayur Sop", "Kopi Arabika", "Ubi Cilembu"],
+                      hotel: ["Sembalun Homestay", "Rinjani Mountain Lodge", "Sembalun Valley Hotel"],
+                      reviews: [] }
+                ]
+            },
+            "lombok_tengah": {
+                nama: "Kabupaten Lombok Tengah", logo: "🏖️", color: "#FF6347",
+                destinations: [
+                    { id: "kuta_mandalika", nama: "Pantai Kuta Mandalika", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai Kuta Mandalika dengan pasir putih lembut seperti merica. Terkenal dengan Sirkuit Mandalika dan Festival Bau Nyale. Destinasi super prioritas nasional.",
+                      lokasi: "Desa Kuta, Kec. Pujut, Lombok Tengah", tiket: "Gratis", jamBuka: "24 Jam", rating: 4.7,
+                      koordinat: { lat: -8.8156, lng: 116.2678 },
+                      kuliner: ["Ayam Taliwang", "Sate Bulayak", "Plecing Kangkung", "Nasi Campur Mandalika"],
+                      hotel: ["Novotel Lombok", "Pullman Mandalika", "Vive La Vie Hotel", "Qunci Villas"],
+                      reviews: [] },
+                    { id: "desa_sade", nama: "Desa Adat Sade", kategori: "culture", gambar: "https://images.unsplash.com/photo-1587595439777-7900e619992d?w=800",
+                      deskripsi: "Desa tradisional suku Sasak dengan rumah beratap ilalang. Pengunjung bisa belajar menenun songket dan melihat kehidupan tradisional yang masih terjaga.",
+                      lokasi: "Desa Sade, Kec. Pujut, Lombok Tengah", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.4,
+                      koordinat: { lat: -8.8234, lng: 116.2890 },
+                      kuliner: ["Nasi Campur Sasak", "Sate Bulayak", "Jaje Tujak", "Kelapa Muda"],
+                      hotel: ["Kuta Beach Hotel", "Novotel Lombok", "Qunci Villas"],
+                      reviews: [] },
+                    { id: "tanjung_aan", nama: "Pantai Tanjung Aan", kategori: "beach", gambar: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800",
+                      deskripsi: "Pantai dengan dua teluk yang dipisahkan bukit kecil. Pasir halus seperti merica dan air laut jernih. Salah satu pantai terindah di Lombok.",
+                      lokasi: "Desa Mertak, Kec. Pujut, Lombok Tengah", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.8,
+                      koordinat: { lat: -8.8345, lng: 116.2987 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Es Kelapa", "Jagung Bakar"],
+                      hotel: ["Novotel Lombok", "Pullman Mandalika", "Kila Senggigi"],
+                      reviews: [] },
+                    { id: "bukit_seger", nama: "Bukit Seger", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+                      deskripsi: "Bukit di belakang Pantai Kuta dengan pemandangan spektakuler. Tempat sempurna untuk melihat sunrise dan sunset. Lokasi Festival Bau Nyale.",
+                      lokasi: "Desa Kuta, Kec. Pujut, Lombok Tengah", tiket: "Rp 5.000", jamBuka: "06.00 - 18.00", rating: 4.5,
+                      koordinat: { lat: -8.8123, lng: 116.2756 },
+                      kuliner: ["Nasi Campur", "Ayam Bakar", "Pisang Goreng", "Kopi Lombok"],
+                      hotel: ["Novotel Lombok", "Pullman Mandalika", "Kuta Beach Hotel"],
+                      reviews: [] },
+                    { id: "pantai_selong", nama: "Pantai Selong Belanak", kategori: "beach", gambar: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
+                      deskripsi: "Pantai dengan ombak tenang yang cocok untuk belajar surfing. Pasir putih dan pemandangan yang indah. Populer di kalangan peselancar pemula.",
+                      lokasi: "Kec. Pujut, Lombok Tengah", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.8234, lng: 116.2823 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Fresh Juice"],
+                      hotel: ["Selong Belanak Resort", "Novotel Lombok"],
+                      reviews: [] }
+                ]
+            },
+            "lombok_timur": {
+                nama: "Kabupaten Lombok Timur", logo: "🌸", color: "#FF69B4",
+                destinations: [
+                    { id: "pantai_pink", nama: "Pantai Pink", kategori: "beach", gambar: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800",
+                      deskripsi: "Pantai Pink atau Pantai Tangsi adalah salah satu dari tujuh pantai berpasir pink di dunia. Warna pink berasal dari cangkang foraminifera merah. Sangat langka dan eksotis!",
+                      lokasi: "Desa Sekaroh, Kec. Jerowaru, Lombok Timur", tiket: "Rp 5.000", jamBuka: "08.00 - 17.00", rating: 4.8,
+                      koordinat: { lat: -8.7789, lng: 116.5678 },
+                      kuliner: ["Ikan Bakar", "Rumput Laut Goreng", "Es Kelapa Muda", "Nasi Campur"],
+                      hotel: ["Pink Beach Cottage", "Gili Lampu Resort", "Jerowaru Homestay"],
+                      reviews: [] },
+                    { id: "gili_lampu", nama: "Gili Lampu", kategori: "island", gambar: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+                      deskripsi: "Gili Lampu adalah pulau kecil di Lombok Timur yang menawarkan keindahan bawah laut yang luar biasa. Cocok untuk snorkeling dan diving dengan terumbu karang yang masih alami.",
+                      lokasi: "Kec. Jerowaru, Lombok Timur", tiket: "Rp 15.000", jamBuka: "24 Jam", rating: 4.5,
+                      koordinat: { lat: -8.7345, lng: 116.5345 },
+                      kuliner: ["Seafood Fresh", "Ikan Bakar", "Nasi Campur"],
+                      hotel: ["Gili Lampu Resort", "Pink Beach Cottage", "Jerowaru Homestay"],
+                      reviews: [] },
+                    { id: "tanjung_ringgit", nama: "Tanjung Ringgit", kategori: "beach", gambar: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800",
+                      deskripsi: "Ujung tenggara Lombok dengan tebing curam dan laut lepas. Terdapat Goa Jepang peninggalan perang dunia dan mercusuar tua yang masih berdiri kokoh.",
+                      lokasi: "Desa Ketara, Kec. Jerowaru, Lombok Timur", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.4,
+                      koordinat: { lat: -8.8234, lng: 116.6123 },
+                      kuliner: ["Nasi Campur", "Ikan Asar", "Jagung Bose"],
+                      hotel: ["Gili Lampu Resort", "Jerowaru Homestay"],
+                      reviews: [] },
+                    { id: "benang_kelambu", nama: "Air Terjun Benang Kelambu", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800",
+                      deskripsi: "Air terjun unik dengan air yang jatuh seperti kelambu. Terletak di lereng Gunung Rinjani dengan pemandangan yang indah.",
+                      lokasi: "Aikmel, Lombok Timur", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.5,
+                      koordinat: { lat: -8.6456, lng: 116.5234 },
+                      kuliner: ["Nasi Campur", "Ayam Bakar", "Es Kelapa"],
+                      hotel: ["Aikmel Homestay", "Lombok Timur Hotel"],
+                      reviews: [] },
+                    { id: "benang_stokel", nama: "Air Terjun Benang Stokel", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800",
+                      deskripsi: "Air terjun dengan debit air yang deras dan pemandangan yang spektakuler. Terletak tidak jauh dari Benang Kelambu.",
+                      lokasi: "Aikmel, Lombok Timur", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.4,
+                      koordinat: { lat: -8.6478, lng: 116.5256 },
+                      kuliner: ["Nasi Campur", "Jagung Bakar", "Pisang Goreng"],
+                      hotel: ["Aikmel Homestay", "Lombok Timur Hotel"],
+                      reviews: [] }
+                ]
+            },
+            "sumbawa": {
+                nama: "Kabupaten Sumbawa", logo: "🏝️", color: "#20B2AA",
+                destinations: [
+                    { id: "pulau_moyo", nama: "Pulau Moyo", kategori: "island", gambar: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
+                      deskripsi: "Pulau eksotis dengan hutan tropis dan pantai perawan. Pernah dikunjungi Putri Diana dan Mick Jagger. Memiliki air terjun Mata Jitu yang spektakuler di tengah hutan.",
+                      lokasi: "Taman Wisata Alam Pulau Moyo, Sumbawa", tiket: "Rp 50.000", jamBuka: "24 Jam", rating: 4.7,
+                      koordinat: { lat: -8.4345, lng: 117.5678 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur Sumbawa", "Sayur Kelor", "Rumput Laut"],
+                      hotel: ["Amanwana Moyo Island", "Sumbawa Beach Hotel", "Moyo Island Resort"],
+                      reviews: [] },
+                    { id: "pulau_kenawa", nama: "Pulau Kenawa", kategori: "island", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pulau kecil tanpa penghuni dengan padang savana luas. Populer untuk camping dan fotografi. Pemandangan sunset yang sangat memukau.",
+                      lokasi: "Perairan Sumbawa", tiket: "Rp 25.000", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.5678, lng: 117.2345 },
+                      kuliner: ["Bawa Bekal Sendiri", "Ikan Bakar", "Nasi Campur"],
+                      hotel: ["Sumbawa Beach Hotel", "Horizon Hotel Sumbawa", "Hotel Bintang Sumbawa"],
+                      reviews: [] },
+                    { id: "danau_lebo", nama: "Danau Lebo", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1439066615861-d1fb28bfe452?w=800",
+                      deskripsi: "Danau alami yang dikelilingi bukit-bukit kapur. Airnya jernih dan pemandangan tenang. Cocok untuk bersantai dan memancing.",
+                      lokasi: "Desa Lebo, Kec. Moyo Hulu, Sumbawa", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.3,
+                      koordinat: { lat: -8.6123, lng: 117.6234 },
+                      kuliner: ["Nasi Campur Sumbawa", "Ikan Bakar", "Sayur Kelor"],
+                      hotel: ["Sumbawa Beach Hotel", "Horizon Hotel Sumbawa"],
+                      reviews: [] },
+                    { id: "pantai_pulau_moyo", nama: "Pantai Pulau Moyo", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai dengan pasir putih dan air laut yang sangat jernih. Terumbu karang yang masih alami dan biota laut yang beragam.",
+                      lokasi: "Pulau Moyo, Sumbawa", tiket: "Rp 50.000", jamBuka: "24 Jam", rating: 4.7,
+                      koordinat: { lat: -8.4456, lng: 117.5789 },
+                      kuliner: ["Ikan Bakar", "Seafood", "Nasi Campur"],
+                      hotel: ["Amanwana Moyo Island"],
+                      reviews: [] }
+                ]
+            },
+            "sumbawa_barat": {
+                nama: "Kabupaten Sumbawa Barat", logo: "🌊", color: "#00CED1",
+                destinations: [
+                    { id: "pantai_maluk", nama: "Pantai Maluk", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai dengan ombak tenang dan pasir putih lembut. Sunset sangat indah dengan pemandangan gunung di kejauhan. Lokasi yang sempurna untuk bersantai.",
+                      lokasi: "Desa Maluk, Kec. Maluk, Sumbawa Barat", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.5,
+                      koordinat: { lat: -8.9234, lng: 116.8345 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Jagung Bakar"],
+                      hotel: ["Taliwang Beach Hotel", "Sekongkang Resort", "Maluk Beach Inn"],
+                      reviews: [] },
+                    { id: "desa_mantar", nama: "Desa Mantar", kategori: "culture", gambar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+                      deskripsi: "Desa di ketinggian dengan pemandangan spektakuler Selat Alas dan pulau-pulau kecil. Spot favorit untuk melihat sunrise dan sunset dari ketinggian.",
+                      lokasi: "Kec. Jereweh, Sumbawa Barat", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.8456, lng: 116.8456 },
+                      kuliner: ["Nasi Campur Sumbawa", "Sayur Kelor", "Ikan Asar"],
+                      hotel: ["Taliwang Beach Hotel", "Mantar Hill Resort"],
+                      reviews: [] },
+                    { id: "pulau_paserang", nama: "Pulau Paserang", kategori: "island", gambar: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
+                      deskripsi: "Pulau kecil dengan pantai berpasir putih dan air laut yang sangat jernih. Cocok untuk snorkeling dan diving dengan terumbu karang yang masih sangat terjaga.",
+                      lokasi: "Perairan Sumbawa Barat", tiket: "Rp 20.000", jamBuka: "24 Jam", rating: 4.6,
+                      koordinat: { lat: -8.8234, lng: 116.8234 },
+                      kuliner: ["Seafood Fresh", "Ikan Bakar", "Nasi Campur"],
+                      hotel: ["Taliwang Beach Hotel", "Sekongkang Resort", "Maluk Beach Inn"],
+                      reviews: [] },
+                    { id: "pantai_tengah", nama: "Pantai Tengah", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai dengan ombak yang konsisten untuk surfing. Pasir putih dan pemandangan yang indah. Lokasi surfing yang populer.",
+                      lokasi: "Sekongkang, Sumbawa Barat", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.4,
+                      koordinat: { lat: -8.8567, lng: 116.8567 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Jagung Bakar"],
+                      hotel: ["Sekongkang Resort", "Taliwang Beach Hotel"],
+                      reviews: [] }
+                ]
+            },
+            "dompu": {
+                nama: "Kabupaten Dompu", logo: "🏄", color: "#FF4500",
+                destinations: [
+                    { id: "lakey", nama: "Pantai Lakey", kategori: "beach", gambar: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800",
+                      deskripsi: "Surga para peselancar dengan ombak kelas dunia konsisten sepanjang tahun. Memiliki spot surfing terbaik seperti Lakey Peak, Lakey In, dan Lakey Pipe.",
+                      lokasi: "Desa Hu'u, Kec. Hu'u, Dompu", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.9,
+                      koordinat: { lat: -8.5678, lng: 118.3456 },
+                      kuliner: ["Nasi Campur Dompu", "Ikan Bakar", "Rumput Laut Goreng", "Jagung Bose"],
+                      hotel: ["Lakey Peak Surf Camp", "Hu'u Beach Hotel", "Dompu Plaza Hotel", "Surf Resort Lakey"],
+                      reviews: [] },
+                    { id: "gunung_tambora", nama: "Gunung Tambora", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+                      deskripsi: "Gunung berapi dengan letusan dahsyat tahun 1815, terbesar dalam sejarah modern. Kaldera raksasa dan sejarah epik yang menarik untuk dipelajari.",
+                      lokasi: "Taman Nasional Tambora, Dompu & Bima", tiket: "Rp 15.000", jamBuka: "24 Jam", rating: 4.7,
+                      koordinat: { lat: -8.2567, lng: 118.0123 },
+                      kuliner: ["Jagung Bose", "Kopi Dompu", "Sayur Kelor", "Nasi Campur Dompu"],
+                      hotel: ["Dompu Plaza Hotel", "Tambora Hotel", "Hu'u Beach Hotel"],
+                      reviews: [] },
+                    { id: "pulau_satonda", nama: "Pulau Satonda", kategori: "island", gambar: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
+                      deskripsi: "Pulau kecil dengan danau air asin yang memiliki keunikan kimia air mirip laut purba. Pantai berpasir putih dan terumbu karang yang indah.",
+                      lokasi: "Perairan Dompu", tiket: "Rp 25.000", jamBuka: "24 Jam", rating: 4.5,
+                      koordinat: { lat: -8.2234, lng: 118.0345 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Rumput Laut"],
+                      hotel: ["Dompu Plaza Hotel", "Tambora Hotel", "Hu'u Beach Hotel"],
+                      reviews: [] },
+                    { id: "bukit_matompo", nama: "Bukit Matompo", kategori: "mountain", gambar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+                      deskripsi: "Bukit dengan pemandangan spektakuler Teluk Cempi dan pulau-pulau kecil. Spot yang sempurna untuk fotografi dan menikmati sunset dari ketinggian.",
+                      lokasi: "Kec. Pajo, Dompu", tiket: "Rp 10.000", jamBuka: "08.00 - 18.00", rating: 4.4,
+                      koordinat: { lat: -8.5456, lng: 118.4456 },
+                      kuliner: ["Nasi Campur Dompu", "Ikan Bakar", "Jagung Bose"],
+                      hotel: ["Dompu Plaza Hotel", "Tambora Hotel"],
+                      reviews: [] },
+                    { id: "pantai_cempi", nama: "Pantai Cempi", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai dengan pemandangan Teluk Cempi yang indah. Pasir putih dan air laut yang jernih. Lokasi yang tenang untuk bersantai.",
+                      lokasi: "Kec. Pajo, Dompu", tiket: "Rp 10.000", jamBuka: "24 Jam", rating: 4.3,
+                      koordinat: { lat: -8.5678, lng: 118.4678 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur", "Jagung Bose"],
+                      hotel: ["Dompu Plaza Hotel", "Cempi Beach Resort"],
+                      reviews: [] },
+                    { id: "ota_aisa", nama: "Air Terjun OTA Aisa", kategori: "waterfall", gambar: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800",
+                      deskripsi: "Air terjun tersembunyi dengan air yang jernih dan segar. Terletak di tengah hutan dengan suasana yang asri dan tenang.",
+                      lokasi: "Dompu", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.4,
+                      koordinat: { lat: -8.5789, lng: 118.4789 },
+                      kuliner: ["Nasi Campur Dompu", "Jagung Bakar", "Es Kelapa"],
+                      hotel: ["Dompu Plaza Hotel", "Tambora Hotel"],
+                      reviews: [] }
+                ]
+            },
+            "bima": {
+                nama: "Kota Bima", logo: "🏰", color: "#9370DB",
+                destinations: [
+                    { id: "pantai_lawata", nama: "Pantai Lawata", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai favorit di Kota Bima dengan pemandangan sunset indah. Mudah diakses dan menjadi tempat bersantai favorit warga lokal.",
+                      lokasi: "Kel. Lawata, Kec. Asakota, Kota Bima", tiket: "Rp 5.000", jamBuka: "24 Jam", rating: 4.3,
+                      koordinat: { lat: -8.4567, lng: 118.7234 },
+                      kuliner: ["Nasi Campur Bima", "Pisang Epe", "Jagung Bose", "Kue Tradisional"],
+                      hotel: ["Bima Sakti Hotel", "Hotel D'Cendana", "Bima Plaza Hotel"],
+                      reviews: [] },
+                    { id: "museum_asi_mbojo", nama: "Museum Asi Mbojo", kategori: "culture", gambar: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=800",
+                      deskripsi: "Museum yang menyimpan koleksi sejarah dan budaya Kesultanan Bima. Terdapat naskah kuno, senjata tradisional, dan pakaian adat.",
+                      lokasi: "Jl. Langsat, Kota Bima", tiket: "Rp 10.000", jamBuka: "08.00 - 16.00", rating: 4.4,
+                      koordinat: { lat: -8.4678, lng: 118.7456 },
+                      kuliner: ["Nasi Campur Bima", "Pisang Epe", "Kue Tradisional Bima"],
+                      hotel: ["Bima Sakti Hotel", "Hotel D'Cendana", "Bima Plaza Hotel"],
+                      reviews: [] },
+                    { id: "pantai_pink_lambu", nama: "Pantai Pink Lambu", kategori: "beach", gambar: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800",
+                      deskripsi: "Pantai berpasir pink di Kecamatan Lambu. Seperti Pantai Pink di Lombok Timur, pasir pink ini berasal dari campuran pasir putih dan cangkang foraminifera merah.",
+                      lokasi: "Kec. Lambu, Kab. Bima", tiket: "Rp 10.000", jamBuka: "08.00 - 17.00", rating: 4.6,
+                      koordinat: { lat: -8.3456, lng: 118.6234 },
+                      kuliner: ["Nasi Campur Bima", "Ikan Bakar", "Jagung Bose"],
+                      hotel: ["Bima Sakti Hotel", "Bima Plaza Hotel", "Lambu Resort"],
+                      reviews: [] },
+                    { id: "pulau_kelapa", nama: "Pulau Kelapa", kategori: "island", gambar: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+                      deskripsi: "Pulau kecil di perairan Bima yang ditumbuhi pohon kelapa. Cocok untuk snorkeling, diving, dan bersantai di pantai.",
+                      lokasi: "Perairan Bima, Kota Bima", tiket: "Rp 15.000", jamBuka: "24 Jam", rating: 4.4,
+                      koordinat: { lat: -8.4456, lng: 118.7456 },
+                      kuliner: ["Ikan Bakar", "Nasi Campur Bima", "Kelapa Muda"],
+                      hotel: ["Bima Sakti Hotel", "Hotel D'Cendana", "Bima Plaza Hotel"],
+                      reviews: [] },
+                    { id: "pantai_raba", nama: "Pantai Raba", kategori: "beach", gambar: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+                      deskripsi: "Pantai di pusat Kota Bima dengan pemandangan yang indah. Lokasi yang mudah diakses untuk bersantai dan menikmati sunset.",
+                      lokasi: "Kel. Raba, Kota Bima", tiket: "Rp 5.000", jamBuka: "24 Jam", rating: 4.2,
+                      koordinat: { lat: -8.4678, lng: 118.7678 },
+                      kuliner: ["Nasi Campur Bima", "Pisang Epe", "Jagung Bose"],
+                      hotel: ["Bima Sakti Hotel", "Bima Plaza Hotel"],
+                      reviews: [] }
+                ]
+            }
+        };
+
+        // ==========================================
+        // GLOBAL VARIABLES
+        // ==========================================
+        let currentDestId = '';
+        let currentRegencyKey = '';
+        const backgroundImages = [
+            'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920',
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920',
+            'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1920',
+            'https://images.unsplash.com/photo-1439066615861-d1fb28bfe452?w=1920',
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920',
+            'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920',
+        ];
+        let currentBgIndex = 0;
+
+        // ==========================================
+        // LOADING SCREEN
+        // ==========================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // ==========================================
+        // CUSTOM CURSOR
+        // ==========================================
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX - 10 + 'px';
+                cursorFollower.style.top = e.clientY - 10 + 'px';
+            }, 100);
+        });
+
+        document.querySelectorAll('a, button, .nav-link').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // ==========================================
+        // SNOW EFFECT
+        // ==========================================
+        function createSnowflakes() {
+            const container = document.getElementById('snowContainer');
+            const snowflakeCount = 50;
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.width = Math.random() * 10 + 5 + 'px';
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.animationDuration = Math.random() * 10 + 5 + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(snowflake);
+            }
+        }
+
+        // ==========================================
+        // FLOATING PARTICLES
+        // ==========================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 20 + 10 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.opacity = Math.random() * 0.5;
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = Math.random() * 20 + 15 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // ==========================================
+        // BACKGROUND ROTATION
+        // ==========================================
+        function changeBackground() {
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) {
+                dashboard.style.backgroundImage = `url(${backgroundImages[currentBgIndex]})`;
+                currentBgIndex = (currentBgIndex + 1) % backgroundImages.length;
+            }
+        }
+
+        // ==========================================
+        // NAVIGATION
+        // ==========================================
+        function showSection(sectionId) {
+            const navbar = document.getElementById('navbar');
+            if (navbar) navbar.classList.add('visible');
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startExploring() {
+            showSection('destinations');
+        }
+
+        // ==========================================
+        // SEARCH GLOBAL
+        // ==========================================
+        function searchDestinationsGlobal() {
+            const searchTerm = document.getElementById('searchInputGlobal').value.toLowerCase().trim();
+            const regenciesView = document.getElementById('regencies-view');
+            const searchResultsView = document.getElementById('search-results-view');
+            const searchResultsInfo = document.getElementById('searchResultsInfo');
+            const searchResultsText = document.getElementById('searchResultsText');
+            const searchResultsContainer = document.getElementById('search-results-container');
+
+            if (searchTerm === '') {
+                regenciesView.style.display = 'block';
+                searchResultsView.style.display = 'none';
+                searchResultsInfo.classList.remove('active');
+                return;
+            }
+
+            let results = [];
+            for (const [key, regency] of Object.entries(destinationsData)) {
+                regency.destinations.forEach(dest => {
+                    if (dest.nama.toLowerCase().includes(searchTerm) || 
+                        dest.deskripsi.toLowerCase().includes(searchTerm) ||
+                        dest.lokasi.toLowerCase().includes(searchTerm) ||
+                        getCategoryName(dest.kategori).toLowerCase().includes(searchTerm)) {
+                        results.push({ ...dest, regencyKey: key, regencyName: regency.nama });
+                    }
+                });
+            }
+
+            regenciesView.style.display = 'none';
+            searchResultsView.style.display = 'block';
+            searchResultsInfo.classList.add('active');
+            searchResultsText.textContent = `🔍 Ditemukan ${results.length} destinasi untuk "${searchTerm}"`;
+
+            if (results.length === 0) {
+                searchResultsContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--light);">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">😔</div>
+                        <h3>Tidak ada destinasi yang cocok</h3>
+                        <p>Coba kata kunci lain seperti: Pantai, Gunung, Rinjani, Pink, Lakey</p>
+                    </div>
+                `;
+            } else {
+                searchResultsContainer.innerHTML = results.map(dest => {
+                    const stars = '⭐'.repeat(Math.floor(dest.rating));
+                    return `
+                        <div class="destination-card">
+                            <img src="${dest.gambar}" alt="${dest.nama}" class="dest-img">
+                            <div class="dest-info">
+                                <span class="dest-category">${getCategoryName(dest.kategori)}</span>
+                                <div class="dest-rating">${stars} ${dest.rating}</div>
+                                <h3>${dest.nama}</h3>
+                                <p class="dest-location">📍 ${dest.lokasi}</p>
+                                <p style="color: var(--primary); font-size: 0.85rem; margin-bottom: 0.5rem;">🏘️ ${dest.regencyName}</p>
+                                <p class="dest-desc">${dest.deskripsi.substring(0, 150)}...</p>
+                                <button class="btn-detail" onclick="showDestinationDetail('${dest.regencyKey}', '${dest.id}')">Lihat Detail</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInputGlobal').value = '';
+            searchDestinationsGlobal();
+        }
+
+        // ==========================================
+        // DARK MODE
+        // ==========================================
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // ==========================================
+        // MULTI-LANGUAGE
+        // ==========================================
+        function changeLanguage(lang) {
+            localStorage.setItem('language', lang);
+        }
+
+        const savedLang = localStorage.getItem('language') || 'id';
+        document.getElementById('langSelect').value = savedLang;
+        changeLanguage(savedLang);
+
+        // ==========================================
+        // RENDER FUNCTIONS
+        // ==========================================
+        function renderRegencies() {
+            const container = document.getElementById('regencies-container');
+            if (!container) return;
+            container.innerHTML = '';
+            for (const [key, regency] of Object.entries(destinationsData)) {
+                const card = document.createElement('div');
+                card.className = 'regency-card';
+                card.style.borderColor = regency.color;
+                card.innerHTML = `
+                    <div class="regency-logo" style="background-color: ${regency.color}">${regency.logo}</div>
+                    <h3>${regency.nama}</h3>
+                    <p>${regency.destinations.length} Destinasi</p>
+                    <button class="btn-explore" onclick="showRegencyDestinations('${key}')">Jelajahi Destinasi</button>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function showRegencyDestinations(regencyKey) {
+            currentRegencyKey = regencyKey;
+            const regency = destinationsData[regencyKey];
+            if (!regency) return;
+            const container = document.getElementById('destinations-container');
+            const title = document.getElementById('regency-title');
+            title.textContent = regency.nama;
+            title.style.color = regency.color;
+            container.innerHTML = '';
+            regency.destinations.forEach(dest => {
+                const card = document.createElement('div');
+                card.className = 'destination-card';
+                const stars = '⭐'.repeat(Math.floor(dest.rating));
+                card.innerHTML = `
+                    <img src="${dest.gambar}" alt="${dest.nama}" class="dest-img">
+                    <div class="dest-info">
+                        <span class="dest-category">${getCategoryName(dest.kategori)}</span>
+                        <div class="dest-rating">${stars} ${dest.rating}</div>
+                        <h3>${dest.nama}</h3>
+                        <p class="dest-location">📍 ${dest.lokasi}</p>
+                        <p class="dest-desc">${dest.deskripsi.substring(0, 150)}...</p>
+                        <button class="btn-detail" onclick="showDestinationDetail('${regencyKey}', '${dest.id}')">Lihat Detail</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            showSection('destinations-list');
+        }
+
+        function getCategoryName(cat) {
+            const categories = {
+                'beach': '🏖️ Pantai',
+                'mountain': '🏔️ Gunung',
+                'culture': '🏛️ Budaya',
+                'island': '🏝️ Pulau',
+                'waterfall': '💧 Air Terjun'
+            };
+            return categories[cat] || cat;
+        }
+
+        function showDestinationDetail(regencyKey, destId) {
+            const regency = destinationsData[regencyKey];
+            const dest = regency.destinations.find(d => d.id === destId);
+            if (!dest) return;
+            
+            currentDestId = destId;
+            document.getElementById('detail-regency-name').textContent = regency.nama;
+            document.getElementById('detail-dest-name').textContent = dest.nama;
+            document.getElementById('detail-dest-name-title').textContent = dest.nama;
+            document.getElementById('detail-image').src = dest.gambar;
+            document.getElementById('detail-desc').textContent = dest.deskripsi;
+            document.getElementById('detail-location').textContent = dest.lokasi;
+            document.getElementById('detail-ticket').textContent = dest.tiket;
+            document.getElementById('detail-hours').textContent = dest.jamBuka;
+            document.getElementById('detail-category').textContent = getCategoryName(dest.kategori);
+            
+            const stars = '⭐'.repeat(Math.floor(dest.rating));
+            document.getElementById('detail-rating').textContent = `${stars} ${dest.rating}/5`;
+            
+            if (dest.koordinat) {
+                const coords = `${dest.koordinat.lat.toFixed(4)}° LS, ${dest.koordinat.lng.toFixed(4)}° BT`;
+                document.getElementById('gps-coordinates').textContent = coords;
+                const mapsUrl = `https://maps.google.com/maps?q=${dest.koordinat.lat},${dest.koordinat.lng}&hl=id&z=15&output=embed`;
+                document.getElementById('detail-maps').src = mapsUrl;
+            }
+            
+            document.getElementById('detail-kuliner').innerHTML = dest.kuliner.map(k => `<span class="kuliner-tag">${k}</span>`).join('');
+            document.getElementById('detail-hotel').innerHTML = dest.hotel.map(h => `<li>🏨 ${h}</li>`).join('');
+            
+            showSection('destination-detail');
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+            let allImages = [];
+            for (const regency of Object.values(destinationsData)) {
+                regency.destinations.forEach(dest => {
+                    allImages.push({ nama: dest.nama, regency: regency.nama, gambar: dest.gambar, kategori: dest.kategori });
+                });
+            }
+            container.innerHTML = allImages.map(img => `
+                <div class="gallery-item">
+                    <img src="${img.gambar}" alt="${img.nama}" loading="lazy">
+                    <div class="gallery-info">
+                        <h4>${img.nama}</h4>
+                        <p>${img.regency} • ${getCategoryName(img.kategori)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // BUDGET CALCULATOR
+        // ==========================================
+        function calculateBudget() {
+            const people = parseInt(document.getElementById('calcPeople').value) || 1;
+            const days = parseInt(document.getElementById('calcDays').value) || 1;
+            const accommodation = parseInt(document.getElementById('calcAccommodation').value) || 0;
+            const food = parseInt(document.getElementById('calcFood').value) || 0;
+            const transport = parseInt(document.getElementById('calcTransport').value) || 0;
+            
+            const totalAccommodation = accommodation * days;
+            const totalFood = food * days * people;
+            const total = totalAccommodation + totalFood + transport;
+            const perPerson = Math.round(total / people);
+            
+            document.getElementById('calcTotal').textContent = `Rp ${perPerson.toLocaleString('id-ID')}`;
+        }
+
+        // ==========================================
+        // SCROLL TO TOP
+        // ==========================================
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            createSnowflakes();
+            createParticles();
+            changeBackground();
+            setInterval(changeBackground, 5000);
+            renderRegencies();
+            renderGallery();
+            calculateBudget();
+
+            const btnExplore = document.getElementById('btnExplore');
+            if (btnExplore) {
+                btnExplore.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startExploring();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
